@@ -27,10 +27,10 @@ export class User extends BaseEntity {
     status: boolean;
 
     @Column({ nullable: false })
-    password: string;
+    password?: string;
 
     @Column({ nullable: false })
-    salt: string;
+    salt?: string;
 
     @Column({ nullable: true, type: 'varchar', length: 64 })
     confirmationToken: string;
