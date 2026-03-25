@@ -52,6 +52,13 @@ export class UserRepository {
         }
     }
 
+    async findById(id: number): Promise<User | null> {
+        return this.repo.findOne({
+            where: { id },
+            select: ['id', 'name', 'email', 'status', 'role'],
+        });
+    }
+
     async checkCredentials(credentialsDto: CredentialsDto): Promise<User | null> {
         const { email, password } = credentialsDto;
         const user = await this.repo.findOne({
