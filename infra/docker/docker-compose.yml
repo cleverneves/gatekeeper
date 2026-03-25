@@ -10,6 +10,7 @@ services:
     environment:
       POSTGRES_USER: pguser
       POSTGRES_PASSWORD: pgpassword
+      POSTGRES_DB: gatekeeper
 
   adminer:
     image: adminer
