@@ -11,6 +11,7 @@ import {
     InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CredentialsDto } from './dto/credentials.dto';
 
 @Injectable()
 export class UserRepository {
@@ -49,6 +50,19 @@ export class UserRepository {
                 );
             }
         }
+    }
+
+    async checkCredentials(credentialsDto: CredentialsDto): Promise<User | null> {
+        const { email, password } = credentialsDto;
+        const user = await this.repo.findOne({
+            where: { email, status: true },
+        });
+
+        if (!user) return null;
+
+        const isValidPassword = await user.checkPassword(password);
+
+        return isValidPassword ? user : null;
     }
 
     private async hashPassword(password: string, salt: string): Promise<string> {
