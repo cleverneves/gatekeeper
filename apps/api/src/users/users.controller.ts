@@ -1,4 +1,4 @@
-import { Controller, Post, Body, ValidationPipe, UseGuards, Get, Param, Patch, ForbiddenException, Delete } from '@nestjs/common';
+import { Controller, Post, Body, ValidationPipe, UseGuards, Get, Param, Patch, ForbiddenException, Delete, Query } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { ReturnUserDto } from './dto/return-user.dto';
@@ -9,6 +9,7 @@ import { UserRole } from './user-roles.enum';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from './user.entity';
+import { FindUsersQueryDto } from './dto/find-users-query.dto';
 
 @Controller('users')
 @UseGuards(AuthGuard(), RolesGuard)
@@ -56,6 +57,16 @@ export class UsersController {
         await this.usersService.deleteUser(id);
         return {
             message: 'Usuário removido com sucesso',
+        };
+    }
+
+    @Get()
+    @Role(UserRole.ADMIN)
+    async findUsers(@Query() query: FindUsersQueryDto) {
+        const found = await this.usersService.findUsers(query);
+        return {
+            found,
+            message: 'Usuários encontrados',
         };
     }
 }
